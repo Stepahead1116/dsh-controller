@@ -1,0 +1,16 @@
+# 编译产物
+dsh-controller
+*.o
+*.dSYM/
+
+# 测试 / 临时
+test_svg
+/tmp/
+.DS_Store
+
+# 构建出的 .app（如需打包发布可单独 release）
+*.app
+
+# Xcode / Swift
+.build/
+.swiftpm/
