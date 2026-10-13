@@ -9,7 +9,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     var guiDomain: String { "gui/\(getuid())" }
     var serviceTarget: String { "\(guiDomain)/\(label)" }
-    var plistPath: String { "\(NSHomeDirectory())/Library/LaunchAgents/\(label).plist" }
+    var plistPath: String { "\(NSHomeDirectory())/.dsh/\(label).plist" }
 
     let menu = NSMenu()
     let statusMenuItem = NSMenuItem()
@@ -205,6 +205,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let p = Process()
         p.launchPath = "/bin/zsh"
         p.arguments = ["-c", cmd]
+        // GUI 启动的 App 默认 PATH 不含 homebrew，需显式注入，否则 dsh/npm（shebang 依赖 node）找不到
+        var env = ProcessInfo.processInfo.environment
+        env["PATH"] = "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
+        p.environment = env
         let pipe = Pipe()
         p.standardOutput = pipe
         p.standardError = pipe
